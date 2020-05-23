@@ -1,4 +1,4 @@
-package br.com.desafiocastgroup.castgroup.util;
+package br.com.desafiocastgroup.castgroup.converter;
 
 import java.io.IOException;
 import java.time.LocalDate;

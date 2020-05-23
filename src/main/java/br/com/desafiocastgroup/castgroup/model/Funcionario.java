@@ -1,6 +1,7 @@
 package br.com.desafiocastgroup.castgroup.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,8 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
@@ -19,7 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.desafiocastgroup.castgroup.util.DateConverter;
+import br.com.desafiocastgroup.castgroup.converter.DateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,11 +32,14 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 public class Funcionario {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{funcionario.matricula.notempty}")
-	private Long matricula;
+    @NotNull(message = "{funcionario.id.notempty}")
+    private Long id;
+
+    @NotEmpty(message = "{funcionario.matricula.notempty}")
+	private String matricula;
     
     @Column(nullable = false)
     @NotBlank(message = "{funcionario.nome.notempty}")
@@ -60,5 +66,8 @@ public class Funcionario {
 	
 	@ManyToOne
 	private Equipe equipe;
+	
+	@OneToMany(mappedBy = "funcionario")
+	private List<Ferias> ferias;
 
 }
