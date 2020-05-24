@@ -34,6 +34,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     	return new ResponseEntity<>(new ErrorDto(ex.getMessage(),INTERNAL_SERVER_ERROR.value(),INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getClass().getSimpleName(), null), INTERNAL_SERVER_ERROR);
     }
     
+    @ExceptionHandler(ProcessException.class)
+    protected ResponseEntity<Object> handleProcessException(ProcessException processException, WebRequest request) {
+    	return new ResponseEntity<>(new ErrorDto(processException.getMessage(),processException.getHttpStatus().value(),processException.getHttpStatus().getReasonPhrase(), processException.getClass().getSimpleName(), null), processException.getHttpStatus());
+    }
+    
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     	return new ResponseEntity<>(new ErrorDto(ex.getMessage(),INTERNAL_SERVER_ERROR.value(),INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getClass().getSimpleName(), null), INTERNAL_SERVER_ERROR);

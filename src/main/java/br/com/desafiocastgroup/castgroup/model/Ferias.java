@@ -3,6 +3,7 @@ package br.com.desafiocastgroup.castgroup.model;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,12 +17,18 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.desafiocastgroup.castgroup.converter.DateConverter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Entity
 public class Ferias {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{ferias.id.notempty}")
 	private Long id;
     
     @ManyToOne

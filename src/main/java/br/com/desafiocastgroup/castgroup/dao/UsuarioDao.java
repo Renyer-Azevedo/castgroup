@@ -10,7 +10,7 @@ import br.com.desafiocastgroup.castgroup.model.Usuario;
 import br.com.desafiocastgroup.castgroup.repository.UsuarioRepository;
 
 @Repository
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class UsuarioDao {
 	
 	private UsuarioRepository usuarioRepository;
@@ -20,12 +20,17 @@ public class UsuarioDao {
 		this.usuarioRepository = usuarioRepository;
 	}
 	
+	@Transactional(readOnly = false)
 	public Usuario salvar(Usuario usuario) {
 		return this.usuarioRepository.save(usuario);
 	}
 	
 	public List<Usuario> listarTodos(){
 		return (List<Usuario>) this.usuarioRepository.findAll();
+	}
+	
+	public Usuario buscarPorEmail(String email) {
+		return this.usuarioRepository.findByEmail(email);
 	}
 
 }

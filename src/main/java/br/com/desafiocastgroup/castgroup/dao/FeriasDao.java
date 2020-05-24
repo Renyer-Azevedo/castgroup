@@ -10,7 +10,7 @@ import br.com.desafiocastgroup.castgroup.model.Ferias;
 import br.com.desafiocastgroup.castgroup.repository.FeriasRepository;
 
 @Repository
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class FeriasDao {
 
 	private FeriasRepository feriasRepository;
@@ -20,6 +20,7 @@ public class FeriasDao {
 		this.feriasRepository = feriasRepository;
 	}
 	
+	@Transactional(readOnly = false)
 	public Ferias salvar(Ferias ferias) {
 		return this.feriasRepository.save(ferias);
 	}
@@ -28,8 +29,9 @@ public class FeriasDao {
 		return (List<Ferias>) this.feriasRepository.findAll();
 	}
 	
-	public void remover(Long id) {
-		this.feriasRepository.deleteById(id);
+	@Transactional(readOnly = false)
+	public void remover(Ferias ferias) {
+		this.feriasRepository.delete(ferias);
 	}
 	
 	public List<Ferias> listarPorIds(List<Long> ids) {

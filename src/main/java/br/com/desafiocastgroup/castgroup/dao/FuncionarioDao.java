@@ -1,5 +1,6 @@
 package br.com.desafiocastgroup.castgroup.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +12,7 @@ import br.com.desafiocastgroup.castgroup.model.Funcionario;
 import br.com.desafiocastgroup.castgroup.repository.FuncionarioRepository;
 
 @Repository
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class FuncionarioDao {
 
 	private FuncionarioRepository funcionarioRepository;
@@ -21,6 +22,7 @@ public class FuncionarioDao {
 		this.funcionarioRepository = funcionarioRepository;
 	}
 	
+	@Transactional(readOnly = false)
 	public Funcionario salvar(Funcionario funcionario) {
 		return this.funcionarioRepository.save(funcionario);
 	}
@@ -39,6 +41,22 @@ public class FuncionarioDao {
 	
 	public List<Funcionario> listarQueDevemSolicitarFerias(List<Long> ids) {
 		return (List<Funcionario>) this.funcionarioRepository.findAllById(ids);
+	}
+	
+	public Long count() {
+		return this.funcionarioRepository.count();
+	}
+	
+	public Funcionario buscarPorMatricula(String matricula) {
+		return this.funcionarioRepository.findByMatricula(matricula);
+	}
+	
+	public BigDecimal getNextValMySequence() {
+		return this.funcionarioRepository.getNextValMySequence();
+	}
+	
+	public Boolean isExistFuncionario(Funcionario funcionario) {
+		return this.funcionarioRepository.existsById(funcionario.getId());
 	}
 	
 }

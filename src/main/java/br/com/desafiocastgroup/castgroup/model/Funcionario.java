@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
@@ -33,12 +32,12 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Funcionario {
 	
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{funcionario.id.notempty}")
     private Long id;
-
-    @NotEmpty(message = "{funcionario.matricula.notempty}")
+    
+    @Column(nullable = false)
 	private String matricula;
     
     @Column(nullable = false)
