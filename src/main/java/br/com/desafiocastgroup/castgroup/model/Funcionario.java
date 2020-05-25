@@ -44,7 +44,7 @@ public class Funcionario {
     @NotBlank(message = "{funcionario.nome.notempty}")
 	private String nome;
     
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     @NotNull(message = "{funcionario.datanascimento.notempty}")
 	@PastOrPresent(message = "{funcionario.datanascimento.pastorpresent}")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "yyyy-MM-dd")
@@ -54,7 +54,7 @@ public class Funcionario {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Endereco endereco;
 	
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     @NotNull(message = "{funcionario.datacontratacao.notempty}")
 	@PastOrPresent(message = "{funcionario.datacontratacao.pastorpresent}")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "yyyy-MM-dd")

@@ -34,14 +34,14 @@ public class Ferias {
     @ManyToOne
 	Funcionario funcionario;
 	
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     @NotNull(message = "{ferias.datainicio.notempty}")
 	@PastOrPresent(message = "{ferias.datainicio.pastorpresent}")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateConverter.class)
 	private LocalDate dataInicio;
 	
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     @NotNull(message = "{ferias.datafim.notempty}")
 	@PastOrPresent(message = "{ferias.datafim.pastorpresent}")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "yyyy-MM-dd")
