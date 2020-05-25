@@ -9,5 +9,6 @@ public interface EquipeService {
 	Equipe salvar(Equipe equipe);
 	List<Equipe> listarTodos();
 	Equipe buscarPorId(Long id);
+	boolean existirEquipePorNome(String nome);
 
 }

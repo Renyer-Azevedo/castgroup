@@ -37,5 +37,9 @@ public class EquipeDao {
 		}
 		return null;
 	}
+	
+	public boolean existirEquipePorNome(String nome) {
+		return this.equipeRepository.existsByNome(nome);
+	}
  
 }

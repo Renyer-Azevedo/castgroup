@@ -70,10 +70,10 @@ public class FuncionarioServiceImpl implements FuncionarioService{
 		
 		//caso funcionário tenha férias
 		if (ferias != null) {
-			return (Util.buscarDiferencaEntreDatasEmMeses(LocalDate.now(),ferias.getDataFim()) + meses) >= limiteFerias;
+			return (Util.buscarDiferencaEntreDatasEmMeses(ferias.getDataFim(),LocalDate.now()) + meses) >= limiteFerias;
 		}
 		//verifica pelo dia de contratação
-		return (Util.buscarDiferencaEntreDatasEmMeses(LocalDate.now(), funcionario.getDataContratacao()) + meses) >= limiteFerias;
+		return (Util.buscarDiferencaEntreDatasEmMeses(funcionario.getDataContratacao(),LocalDate.now()) + meses) >= limiteFerias;
 		
 	}
 

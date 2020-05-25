@@ -5,7 +5,11 @@ import org.springframework.validation.Validator;
 
 import br.com.desafiocastgroup.castgroup.model.Ferias;
 
-public class FeriasValidator  implements Validator{
+public class FeriasValidator implements Validator{
+
+	private FeriasValidator() {
+		super();
+	}
 
 	@Override
 	public boolean supports(Class<?> clazz) {

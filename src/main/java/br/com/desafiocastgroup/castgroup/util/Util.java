@@ -63,7 +63,7 @@ public class Util {
 		      barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
 		    return MatrixToImageWriter.toBufferedImage(bitMatrix);
 		} catch (WriterException e) {
-			throw new ProcessException("{generate.qrcode.image}" + e.getMessage());
+			throw new ProcessException(e.getMessage());
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class Util {
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
-			throw new ProcessException("{converter.object.json}" + e.getMessage());
+			throw new ProcessException(e.getMessage());
 		}
 	}
 	

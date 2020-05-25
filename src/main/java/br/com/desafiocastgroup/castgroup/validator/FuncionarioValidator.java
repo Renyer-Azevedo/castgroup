@@ -7,6 +7,10 @@ import br.com.desafiocastgroup.castgroup.model.Funcionario;
 import br.com.desafiocastgroup.castgroup.util.Util;
 
 public class FuncionarioValidator implements Validator{
+	
+	private FuncionarioValidator() {
+		super();
+	}
 
 	@Override
 	public boolean supports(Class<?> clazz) {

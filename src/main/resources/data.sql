@@ -1,0 +1,1 @@
+INSERT INTO usuario VALUES (1,'administrador.ferias@castgroup.com.br','$2a$10$..ZlubBSdVv3xYAiJt5L4.9mCuybiu7Mk9uDWcywRumZOKa5JP8Sq');

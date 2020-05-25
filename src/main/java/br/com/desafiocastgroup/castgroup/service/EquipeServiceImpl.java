@@ -33,4 +33,9 @@ public class EquipeServiceImpl implements EquipeService{
 		return this.equipeDao.buscarPorId(id);
 	}
 
+	@Override
+	public boolean existirEquipePorNome(String nome) {
+		return this.equipeDao.existirEquipePorNome(nome);
+	}
+
 }

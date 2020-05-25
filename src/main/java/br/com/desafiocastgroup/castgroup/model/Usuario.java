@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,13 +24,14 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotBlank(message = "{usuario.email.notempty}")
     @Email
 	private String email;
     
     @Column(nullable = false)
     @NotBlank(message = "{usuario.password.notempty}")
+    @JsonIgnore
 	private String password;
 
 }

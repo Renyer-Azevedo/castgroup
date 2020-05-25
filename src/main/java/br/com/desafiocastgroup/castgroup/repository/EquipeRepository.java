@@ -6,4 +6,6 @@ import br.com.desafiocastgroup.castgroup.model.Equipe;
 
 public interface EquipeRepository extends CrudRepository<Equipe, Long>{
 
+	boolean existsByNome(String nome);
+	
 }

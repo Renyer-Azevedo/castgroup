@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
+import br.com.desafiocastgroup.castgroup.validator.Unique;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,13 @@ public class Equipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotBlank(message = "{equipe.nome.notempty}")
+    @Unique(message = "{equipe.nome.unique}")
 	private String nome;
     
 	@OneToMany(mappedBy = "equipe")
 	private List<Funcionario> funcionarios;
 
 }
+			
