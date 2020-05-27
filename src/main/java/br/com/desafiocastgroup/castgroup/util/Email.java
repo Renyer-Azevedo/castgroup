@@ -1,11 +1,13 @@
 package br.com.desafiocastgroup.castgroup.util;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.InternetAddress;
@@ -22,10 +24,14 @@ import br.com.desafiocastgroup.castgroup.exception.ProcessException;
 
 @Component
 public class Email {
-	
-	@Autowired
+
 	private JavaMailSender javaMailSender;
 	
+	@Autowired
+	public Email(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
+
 	public void enviar(Mensagem mensagem) {
         
         try {
@@ -66,7 +72,7 @@ public class Email {
         
 	}
 	
-	private void anexarImagensAoCorpoEmail(Multipart multipart, Map<String, String> imagensCorpo) {
+	private void anexarImagensAoCorpoEmail(Multipart multipart, Map<String,Arquivo> imagensCorpo) {
 		
 		try {
 			
@@ -75,39 +81,43 @@ public class Email {
 	            Set<String> setImageID = imagensCorpo.keySet();
 	             
 	            for (String contentId : setImageID) {
+	            	
 	                MimeBodyPart imagePart = new MimeBodyPart();
+	                Arquivo arquivo = imagensCorpo.get(contentId);
 	                imagePart.setHeader("Content-ID", "<" + contentId + ">");
+	                imagePart.setHeader(arquivo.getContentType(),"image/"+arquivo.getFileType());
+	                imagePart.setFileName(arquivo.getFileName().concat(".").concat(arquivo.getFileType()));
+	                DataSource fds = new FileDataSource(arquivo.getFile());
+	                imagePart.setDataHandler(new DataHandler(fds));
 	                imagePart.setDisposition(MimeBodyPart.INLINE);
-	                 
-	                String imageFilePath = imagensCorpo.get(contentId);
-	                
-	                imagePart.attachFile(imageFilePath);
 	
 	                multipart.addBodyPart(imagePart);
 	            }
 	        }
 	        
-		} catch (MessagingException | IOException e) {
+		} catch (MessagingException e) {
 			throw new ProcessException(e.getMessage());
 		}
 		
 	}
 	
-	private void anexarArquivos(Multipart multipart, List<String> arquivos) {
+	private void anexarArquivos(Multipart multipart, List<Arquivo> arquivos) {
 		
 		try {
 			
-	        if (!Util.isListaVazia(arquivos)) {
+	        if (arquivos != null) {
 	        	
-	            for (String filePath : arquivos) {
+	            for (Arquivo arquivo : arquivos) {
 	                MimeBodyPart attachPart = new MimeBodyPart();
-                    attachPart.attachFile(filePath);
+	                attachPart.setFileName(arquivo.getFileName().concat(".").concat(arquivo.getFileType()));
+	                DataSource fds = new FileDataSource(arquivo.getFile());
+	                attachPart.setDataHandler(new DataHandler(fds));
 	                multipart.addBodyPart(attachPart);
 	            }
 	            
 	        }
 	        
-		} catch (MessagingException | IOException e) {
+		} catch (MessagingException e) {
 			throw new ProcessException(e.getMessage());
 		}
 		

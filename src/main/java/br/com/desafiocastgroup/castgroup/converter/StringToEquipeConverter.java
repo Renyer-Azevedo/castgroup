@@ -7,28 +7,26 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 
 import br.com.desafiocastgroup.castgroup.model.Equipe;
 import br.com.desafiocastgroup.castgroup.service.EquipeService;
+import br.com.desafiocastgroup.castgroup.util.Util;
 
 @Component
-public class StringToEquipeConverter {
+public class StringToEquipeConverter extends StdConverter<String, Equipe> {
 	
-    private StringToEquipeConverter() {
-		super();
+	private EquipeService equipeService;
+	
+	@Autowired
+    public StringToEquipeConverter(EquipeService equipeService) {
+    	this.equipeService = equipeService;
 	}
 
-	public static class StringToEquipeDeserializationConverter extends StdConverter<String, Equipe> {
+	@Override
+    public Equipe convert(String id) {
     	
-    	@Autowired
-    	private EquipeService equipeService;
+		if (Util.isStringVazia(id)) {
+			return null;
+		}
 
-        @Override
-        public Equipe convert(String id) {
-    		if (id.isEmpty()) {
-    			return null;
-    		}
-
-    		return this.equipeService.buscarPorId(Long.valueOf(id));
-        }
-
+		return this.equipeService.buscarPorId(Long.valueOf(id));
     }
 
 }

@@ -7,28 +7,26 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 
 import br.com.desafiocastgroup.castgroup.model.Funcionario;
 import br.com.desafiocastgroup.castgroup.service.FuncionarioService;
+import br.com.desafiocastgroup.castgroup.util.Util;
 
 @Component
-public class StringToFuncionarioConverter {
+public class StringToFuncionarioConverter extends StdConverter<String, Funcionario> {
 	
-    private StringToFuncionarioConverter() {
-		super();
+	private FuncionarioService funcionarioService;
+	
+	@Autowired
+    public StringToFuncionarioConverter(FuncionarioService funcionarioService) {
+    	this.funcionarioService = funcionarioService;
 	}
 
-	public static class StringToFuncionarioDeserializationConverter extends StdConverter<String, Funcionario> {
+	@Override
+    public Funcionario convert(String id) {
     	
-    	@Autowired
-    	private FuncionarioService funcionarioService;
+		if (Util.isStringVazia(id)) {
+			return null;
+		}
 
-        @Override
-        public Funcionario convert(String id) {
-    		if (id.isEmpty()) {
-    			return null;
-    		}
-
-    		return this.funcionarioService.buscarPorId(Long.valueOf(id));
-        }
-
+		return this.funcionarioService.buscarPorId(Long.valueOf(id));
     }
 
 }

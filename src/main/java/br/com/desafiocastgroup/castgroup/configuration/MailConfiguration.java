@@ -2,27 +2,35 @@ package br.com.desafiocastgroup.castgroup.configuration;
 
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class MailConfiguration {
 	
-	@Autowired
-	private Environment env;
+	@Value("${mail.smtp.host}")
+	private String host;
+	
+	@Value("${mail.smtp.port}")
+	private String port;
+	
+	@Value("${mail.smtp.username}")
+	private String username;
+	
+	@Value("${mail.smtp.password}")
+	private String password;
 	
 	@Bean
 	public JavaMailSender mailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		
-		mailSender.setHost(env.getProperty("mail.smtp.host"));
-		mailSender.setPort(env.getProperty("mail.smtp.port", Integer.class));
-		mailSender.setUsername(env.getProperty("mail.smtp.username"));
-		mailSender.setPassword(env.getProperty("mail.smtp.password"));
+		mailSender.setHost(host);
+		mailSender.setPort(Integer.parseInt(port));
+		mailSender.setUsername(username);
+		mailSender.setPassword(password);
 		
 		Properties props = new Properties();
 		props.put("mail.transport.protocol", "smtp");

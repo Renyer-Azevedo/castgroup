@@ -16,8 +16,8 @@ public class Mensagem {
 	private List<String> destinatarios;
 	private String assunto;
 	private String corpo;
-	private Map<String, String> imagensCorpo;
+	private Map<String,Arquivo> imagensCorpo;
 	private List<String> cco;
-	private List<String> anexos;
+	private List<Arquivo> anexos;
 
 }

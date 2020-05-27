@@ -1,6 +1,7 @@
 package br.com.desafiocastgroup.castgroup.service;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,16 +10,19 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import br.com.desafiocastgroup.castgroup.converter.FuncionarioSerializer;
 import br.com.desafiocastgroup.castgroup.dao.FeriasDao;
-import br.com.desafiocastgroup.castgroup.dao.FuncionarioDao;
 import br.com.desafiocastgroup.castgroup.exception.ProcessException;
 import br.com.desafiocastgroup.castgroup.model.Ferias;
 import br.com.desafiocastgroup.castgroup.model.Funcionario;
-import br.com.desafiocastgroup.castgroup.util.Disco;
+import br.com.desafiocastgroup.castgroup.util.Arquivo;
 import br.com.desafiocastgroup.castgroup.util.Email;
 import br.com.desafiocastgroup.castgroup.util.Mensagem;
 import br.com.desafiocastgroup.castgroup.util.Util;
@@ -27,17 +31,19 @@ import br.com.desafiocastgroup.castgroup.util.Util;
 public class FeriasServiceImpl implements FeriasService{
 	
 	private FeriasDao feriasDao;
-	private FuncionarioDao funcionarioDao;
+	private FuncionarioService funcionarioService;
 	private MessageSource messageSource;
-	private Disco disco;
 	private Email email;
+	@Value("${mail.rementente}")
+	private String remetente;
+	@Value("${mail.destinatario}")
+	private String destinatario;
 	
 	@Autowired
-	private FeriasServiceImpl(FeriasDao feriasDao, FuncionarioDao funcionarioDao, MessageSource messageSource, Disco disco, Email email) {
+	public FeriasServiceImpl(FeriasDao feriasDao, FuncionarioService funcionarioService, MessageSource messageSource, Email email) {
 		this.feriasDao = feriasDao;
-		this.funcionarioDao = funcionarioDao;
+		this.funcionarioService = funcionarioService;
 		this.messageSource = messageSource;
-		this.disco = disco;
 		this.email = email;
 	}
 
@@ -45,25 +51,40 @@ public class FeriasServiceImpl implements FeriasService{
 	public BufferedImage salvar(Ferias ferias) {
 		validarFerias(ferias);
 		this.feriasDao.salvar(ferias);
-		BufferedImage generateQRCodeImage = gerarQrCode(ferias.getFuncionario());
+		Funcionario funcionario = this.funcionarioService.buscarPorId(ferias.getFuncionario().getId());
+		funcionario.getFerias().add(ferias);
+		BufferedImage generateQRCodeImage = gerarQrCode(funcionario);
 		enviarQrCodePorEmail(generateQRCodeImage);
 		return generateQRCodeImage;
 	}
 
 	@Override
 	public List<Ferias> listarTodos() {
+		List<Ferias> ferias = this.feriasDao.listarTodos();
+		if (Util.isListaVazia(ferias)) {
+			throw new ProcessException(HttpStatus.NOT_FOUND, messageSource.getMessage("ferias.notfound", null, Locale.getDefault()));
+		}
 		return this.feriasDao.listarTodos();
 	}
 
 	@Override
-	public void remover(Ferias ferias) {
-		this.feriasDao.remover(ferias);
+	public void remover(Long id) {
+		if (!Util.islongNull(id)) {
+			this.feriasDao.remover(id);
+		}
 	}
 
 	@Override
 	public List<Ferias> buscarFeriasPorMatriculaFuncionario(String matricula) {
-		Funcionario funcionario = this.funcionarioDao.buscarPorMatricula(matricula);
-		if (funcionario != null) {
+		
+		if (!Util.isStringVazia(matricula)) {
+		
+			Funcionario funcionario = this.funcionarioService.buscarPorMatricula(matricula);
+			
+			if (funcionario == null || Util.isListaVazia(funcionario.getFerias())) {
+				throw new ProcessException(HttpStatus.NOT_FOUND, messageSource.getMessage("ferias.notfound", null, Locale.getDefault()));
+			}
+			
 			return funcionario.getFerias();
 		}
 		return new ArrayList<>();
@@ -147,8 +168,12 @@ public class FeriasServiceImpl implements FeriasService{
 	}
 	
 	private BufferedImage gerarQrCode(Funcionario funcionario) {
-		removeFotoFuncionario(funcionario);
-		String informacoes = Util.converterObjectToStringJson(funcionario);
+		List<String> exclusoes = new ArrayList<>();
+		exclusoes.add("foto");
+		exclusoes.add("ferias");
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(Funcionario.class, new FuncionarioSerializer());
+		String informacoes = Util.converterObjectToStringJson(funcionario,exclusoes,module);
 		return Util.generateQRCodeImage(informacoes);
 	}
 
@@ -156,41 +181,38 @@ public class FeriasServiceImpl implements FeriasService{
 
 		if (generateQRCodeImage != null) {
 			
-			String arquivoSalvo = this.disco.salvarQrCode(generateQRCodeImage);
+			final String fileName = "QrCode";
+			final String type = "png";
+			final String contentType = "Content-Type";
+			
 			
 			Mensagem mensagem = new Mensagem();
 			
-			mensagem.setRemetente("fakenews.desafio.empresa@gmail.com");
-			mensagem.setAssunto("QR Code Funcionário Féras");
+			mensagem.setRemetente(this.remetente);
+			mensagem.setAssunto("Funcionário de Férias");
 			
 	        StringBuilder corpo = new StringBuilder();
 	        corpo.append("<html>Olá novo funcionário de férias !!!<br>");
-	        corpo.append("para mais informações aproxime a camera do seu celular para imagem abaixo.<br>");
+	        corpo.append("para mais informações aproxime a camera do seu celular na imagem abaixo.<br>");
 	        corpo.append("<img src=\"cid:qrcode\" width=\"30%\" height=\"30%\" /><br>");
 	        corpo.append("</html>");
 			mensagem.setCorpo(corpo.toString());
 			
-	        Map<String, String> imagensCorpo = new HashMap<>();
-	        imagensCorpo.put("qrcode", arquivoSalvo);
+			File file = Util.converterBufferedImageToFile(generateQRCodeImage, fileName, type);
+			Arquivo arquivo = new Arquivo(fileName, type, contentType, file);
+			
+	        Map<String,Arquivo> imagensCorpo = new HashMap<>();
+	        imagensCorpo.put(fileName, arquivo);
 	        mensagem.setImagensCorpo(imagensCorpo);
 	        
-	        List<String> anexos = new ArrayList<>();
-	        anexos.add(arquivoSalvo);
-	        mensagem.setAnexos(anexos);
-	        
 	        List<String> destinatarios = new ArrayList<>();
-	        destinatarios.add("fakenews.desafio.empresa@gmail.com");
+	        destinatarios.add(this.destinatario);
 	        mensagem.setDestinatarios(destinatarios);
 	        
 			this.email.enviar(mensagem);
 			
 		}
 		
-	}
-
-	private void removeFotoFuncionario(Funcionario funcionario) {
-		 
-		funcionario.setCaminhoFoto("");
 	}
 
 }

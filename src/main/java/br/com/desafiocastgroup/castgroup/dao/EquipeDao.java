@@ -5,13 +5,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.desafiocastgroup.castgroup.model.Equipe;
 import br.com.desafiocastgroup.castgroup.repository.EquipeRepository;
 
 @Repository
-@Transactional(readOnly = true)
 public class EquipeDao {
 	
 	private EquipeRepository equipeRepository;
@@ -21,7 +19,6 @@ public class EquipeDao {
 		this.equipeRepository = equipeRepository;
 	}
 	
-	@Transactional(readOnly = false)
 	public Equipe salvar(Equipe equipe) {
 		return this.equipeRepository.save(equipe);
 	}

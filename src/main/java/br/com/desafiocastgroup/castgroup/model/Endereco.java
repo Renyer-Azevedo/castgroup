@@ -20,7 +20,6 @@ public class Endereco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{endereco.id.notempty}")
     private Long id;
     
 	@Column(nullable = false)

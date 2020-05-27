@@ -6,13 +6,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.desafiocastgroup.castgroup.model.Funcionario;
 import br.com.desafiocastgroup.castgroup.repository.FuncionarioRepository;
 
 @Repository
-@Transactional(readOnly = true)
 public class FuncionarioDao {
 
 	private FuncionarioRepository funcionarioRepository;
@@ -22,7 +20,6 @@ public class FuncionarioDao {
 		this.funcionarioRepository = funcionarioRepository;
 	}
 	
-	@Transactional(readOnly = false)
 	public Funcionario salvar(Funcionario funcionario) {
 		return this.funcionarioRepository.save(funcionario);
 	}

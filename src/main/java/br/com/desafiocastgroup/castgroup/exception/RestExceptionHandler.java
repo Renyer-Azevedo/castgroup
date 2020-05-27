@@ -1,9 +1,12 @@
 package br.com.desafiocastgroup.castgroup.exception;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,10 +25,14 @@ import br.com.desafiocastgroup.castgroup.dto.ErrorDto;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<ErrorObject> errors = getErrors(ex);
-        ErrorDto errorResponse = getErrorResponse(ex, status, errors);
-        return new ResponseEntity<>(errorResponse, status);
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    	
+    	List<ErrorObject> errors = e.getBindingResult().getFieldErrors().stream()
+																		         .map(error -> new ErrorObject(error.getDefaultMessage(), error.getField(), error.getRejectedValue()))
+																		         .collect(Collectors.toList());
+    	
+    	ErrorDto errorResponse = new ErrorDto("Requisição possui campos inválidos", status.value(),status.getReasonPhrase(), e.getBindingResult().getObjectName(), errors);
+    	return new ResponseEntity<>(errorResponse, status);
     }
     
     @ResponseStatus(INTERNAL_SERVER_ERROR)
@@ -39,20 +46,22 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
     	return new ResponseEntity<>(new ErrorDto(processException.getMessage(),processException.getHttpStatus().value(),processException.getHttpStatus().getReasonPhrase(), processException.getClass().getSimpleName(), null), processException.getHttpStatus());
     }
     
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<Object> onConstraintValidationException(ConstraintViolationException e) {
+    	
+      List<ErrorObject> errors = e.getConstraintViolations().stream()
+	  															   .map(error -> new ErrorObject(error.getMessage(),error.getPropertyPath().toString(),error.getInvalidValue()))
+	  															   .collect(Collectors.toList());
+      
+      ErrorDto errorResponse = new ErrorDto("Requisição possui campos inválidos", BAD_REQUEST.value(),BAD_REQUEST.getReasonPhrase(), e.getClass().getName(), errors);
+      return new ResponseEntity<>(errorResponse, BAD_REQUEST);
+      
+    }
+    
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     	return new ResponseEntity<>(new ErrorDto(ex.getMessage(),INTERNAL_SERVER_ERROR.value(),INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getClass().getSimpleName(), null), INTERNAL_SERVER_ERROR);
-    }
-
-    private ErrorDto getErrorResponse(MethodArgumentNotValidException ex, HttpStatus status, List<ErrorObject> errors) {
-        return new ErrorDto("Requisição possui campos inválidos", status.value(),
-                status.getReasonPhrase(), ex.getBindingResult().getObjectName(), errors);
-    }
-
-    private List<ErrorObject> getErrors(MethodArgumentNotValidException ex) {
-        return ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> new ErrorObject(error.getDefaultMessage(), error.getField(), error.getRejectedValue()))
-                .collect(Collectors.toList());
     }
 	
 }

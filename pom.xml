@@ -74,33 +74,34 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	    <dependency>
-	        <groupId>com.fasterxml.jackson.core</groupId>
-	        <artifactId>jackson-databind</artifactId>
-	     </dependency>
-         <dependency>
+        <dependency>
          	<groupId>org.springframework.boot</groupId>
          	<artifactId>spring-boot-starter-web</artifactId>
-    	 </dependency>
-		 <dependency>
+    	</dependency>
+		<dependency>
 		    <groupId>com.auth0</groupId>
 		    <artifactId>java-jwt</artifactId>
 		    <version>3.10.3</version>
-		 </dependency>
-		 <dependency>
+		</dependency>
+		<dependency>
 		    <groupId>com.google.zxing</groupId>
 		    <artifactId>core</artifactId>
 		    <version>3.3.0</version>
-		 </dependency>
-		 <dependency>
+		</dependency>
+		<dependency>
 		    <groupId>com.google.zxing</groupId>
 		    <artifactId>javase</artifactId>
 		    <version>3.3.0</version>
-		 </dependency>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+		<dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk-s3</artifactId>
+		    <version>1.11.789</version>
+		</dependency>
 	</dependencies>
 
 	<build>

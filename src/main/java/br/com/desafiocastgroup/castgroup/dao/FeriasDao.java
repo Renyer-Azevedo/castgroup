@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.desafiocastgroup.castgroup.model.Ferias;
 import br.com.desafiocastgroup.castgroup.repository.FeriasRepository;
 
 @Repository
-@Transactional(readOnly = true)
 public class FeriasDao {
 
 	private FeriasRepository feriasRepository;
@@ -20,7 +18,6 @@ public class FeriasDao {
 		this.feriasRepository = feriasRepository;
 	}
 	
-	@Transactional(readOnly = false)
 	public Ferias salvar(Ferias ferias) {
 		return this.feriasRepository.save(ferias);
 	}
@@ -28,10 +25,9 @@ public class FeriasDao {
 	public List<Ferias> listarTodos(){
 		return (List<Ferias>) this.feriasRepository.findAll();
 	}
-	
-	@Transactional(readOnly = false)
-	public void remover(Ferias ferias) {
-		this.feriasRepository.delete(ferias);
+
+	public void remover(Long id) {
+		this.feriasRepository.deleteById(id);
 	}
 	
 	public List<Ferias> listarPorIds(List<Long> ids) {

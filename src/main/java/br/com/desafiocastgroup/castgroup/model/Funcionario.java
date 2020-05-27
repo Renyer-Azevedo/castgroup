@@ -19,9 +19,12 @@ import javax.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.desafiocastgroup.castgroup.converter.DateConverter;
+import br.com.desafiocastgroup.castgroup.converter.StringToDateConverter;
+import br.com.desafiocastgroup.castgroup.converter.StringToEquipeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +33,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class Funcionario {
 	
 
@@ -48,7 +54,7 @@ public class Funcionario {
     @NotNull(message = "{funcionario.datanascimento.notempty}")
 	@PastOrPresent(message = "{funcionario.datanascimento.pastorpresent}")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = DateConverter.class)
+    @JsonDeserialize(converter = StringToDateConverter.class)
 	private LocalDate dataNascimento;
     
 	@OneToOne(cascade = CascadeType.ALL)
@@ -58,11 +64,14 @@ public class Funcionario {
     @NotNull(message = "{funcionario.datacontratacao.notempty}")
 	@PastOrPresent(message = "{funcionario.datacontratacao.pastorpresent}")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = DateConverter.class)
+    @JsonDeserialize(converter = StringToDateConverter.class)
 	private LocalDate dataContratacao;
     
-	private String caminhoFoto;
+
+	private String foto;
 	
+    @NotNull(message = "{funcionario.pertence.equipe}")
+    @JsonDeserialize(converter = StringToEquipeConverter.class)
 	@ManyToOne
 	private Equipe equipe;
 	
