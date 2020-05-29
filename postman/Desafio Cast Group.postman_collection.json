@@ -1,0 +1,383 @@
+{
+	"info": {
+		"_postman_id": "00051665-b9aa-43b5-8fee-edb568b0dba8",
+		"name": "Desafio Cast Group",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/usuarios/login?email=administrador.ferias@castgroup.com.br&password=123a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"usuarios",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "administrador.ferias@castgroup.com.br"
+						},
+						{
+							"key": "password",
+							"value": "123a"
+						}
+					]
+				},
+				"description": "Logar com usuário administrador, é gerado um token necessário para autorização de outras funcionalidades que remetem a requisições POST,PUT e DELETE, requisições GET estão previamente autorizadas."
+			},
+			"response": []
+		},
+		{
+			"name": "Criar usuários",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n\t\"email\": \"fakenews.desafio.empresa@gmail.com\",\n\t\"password\": \"123\"\n\t\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "responsável por cadastrar usuários no sistema e retorna o token de autorização."
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Equipes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbmlzdHJhZG9yLmZlcmlhc0BjYXN0Z3JvdXAuY29tLmJyIiwiZXhwIjoxNTkwNzEwMDg2LCJpYXQiOjE1OTA3MDgyODZ9.2LtBqYhtL_mBT9XRZlpbZ0l4m0V_Ji1ks-fxEZP-IlY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"nome\": \"Primeira\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/equipes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"equipes"
+					]
+				},
+				"description": "Responsável por criar equipes no sistema. retorna a equipe criada.\r\nnecessário token."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar equipes",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/equipes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"equipes"
+					]
+				},
+				"description": "Responsável por retornar todas as equipes."
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Funcionários",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbmlzdHJhZG9yLmZlcmlhc0BjYXN0Z3JvdXAuY29tLmJyIiwiZXhwIjoxNTkwNzEwMDg2LCJpYXQiOjE1OTA3MDgyODZ9.2LtBqYhtL_mBT9XRZlpbZ0l4m0V_Ji1ks-fxEZP-IlY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"nome\": \"Renyer\",\n\t\"dataNascimento\": \"1988-12-07\",\n\t\"endereco\": {\n\t\t\"rua\": \"rua 10\",\n\t\t\"numero\": \"10\",\n\t\t\"complemento\": \"teste\",\n\t\t\"bairro\": \"jsp\",\n\t\t\"cidade\": \"recife\",\n\t\t\"estado\": \"pe\"\n\t},\n\t\"dataContratacao\": \"2013-01-15\",\n\t\"foto\": \"data:image/jpeg;base64,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\",\n\t\"equipe\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/funcionarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"funcionarios"
+					]
+				},
+				"description": "Responsável por criar funcionário no sistema, é enviado uma foto encodada em base64 e essa foto é salvo nas nuvens enviando para o banco de dados apenas o caminho da foto. utilizado AWS S3. Retorna o funcionario.\r\nnecessário token."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar funcionários",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/funcionarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"funcionarios"
+					]
+				},
+				"description": "Responsável por retornar todos os funcionários."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar funcionários com a férias a vencer",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/funcionarios/ferias/expirada?meses=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"funcionarios",
+						"ferias",
+						"expirada"
+					],
+					"query": [
+						{
+							"key": "meses",
+							"value": "5"
+						}
+					]
+				},
+				"description": "Responsável por retornar os funcionários que estão próximo de completar 2 anos na empresa, recebe o numero de meses restante para 2 anos."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar detalhes do funcionário",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/funcionarios/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"funcionarios",
+						"1"
+					]
+				},
+				"description": "Responsável por retornar apenas informações de um funcionário."
+			},
+			"response": []
+		},
+		{
+			"name": "Criar férias",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbmlzdHJhZG9yLmZlcmlhc0BjYXN0Z3JvdXAuY29tLmJyIiwiZXhwIjoxNTkwNzEyMDExLCJpYXQiOjE1OTA3MTAyMTF9.IKpbjbBXIU3Db3EnmhN7OiRofKA8Co8hHYSlyk9sjKs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"funcionario\": 1,\r\n    \"dataInicio\": \"2022-06-01\",\r\n    \"dataFim\": \"2022-06-30\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/ferias",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"ferias"
+					]
+				},
+				"description": "Responsável por criar férias para o funcionário, é gerado um QRCode que é enviado por email com todas informações do funcionário.\r\nesse mesmo QRCode é retornado.\r\nnecessário token."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Ferias",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/ferias",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"ferias"
+					]
+				},
+				"description": "retorna todos os funcionários de férias."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar férias por matrícula",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/ferias/funcionario/matricula?matricula=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"ferias",
+						"funcionario",
+						"matricula"
+					],
+					"query": [
+						{
+							"key": "matricula",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Responsável por retornar as férias de um funcionário por matrícula."
+			},
+			"response": []
+		},
+		{
+			"name": "Remover férias",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/ferias/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"ferias",
+						"1"
+					]
+				},
+				"description": "responsável por excluir as férias."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar usuários",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "Responsável por retornar os usuários do sistema."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

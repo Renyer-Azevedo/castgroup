@@ -10,7 +10,8 @@ import br.com.desafiocastgroup.castgroup.model.Usuario;
 public interface UsuarioService {
 
 	@Transactional(readOnly = false)
-	Usuario salvar(Usuario usuario);
+	String salvar(Usuario usuario);
 	List<Usuario> listarTodos();
 	Usuario buscarPorEmail(String email);
+	String login(String email, String senha);
 }

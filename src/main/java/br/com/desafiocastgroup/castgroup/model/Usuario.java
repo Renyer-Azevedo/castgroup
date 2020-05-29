@@ -8,8 +8,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import br.com.desafiocastgroup.castgroup.validator.Unique;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,12 +25,12 @@ public class Usuario {
     
     @Column(nullable = false, unique = true)
     @NotBlank(message = "{usuario.email.notempty}")
+    @Unique(message = "{usuario.email.unique}")
     @Email
 	private String email;
     
     @Column(nullable = false)
     @NotBlank(message = "{usuario.password.notempty}")
-    @JsonIgnore
 	private String password;
 
 }

@@ -27,8 +27,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
     	
-    	List<ErrorObject> errors = e.getBindingResult().getFieldErrors().stream()
-																		         .map(error -> new ErrorObject(error.getDefaultMessage(), error.getField(), error.getRejectedValue()))
+    	List<Error> errors = e.getBindingResult().getFieldErrors().stream()
+																		         .map(error -> new Error(error.getDefaultMessage(), error.getField(), error.getRejectedValue()))
 																		         .collect(Collectors.toList());
     	
     	ErrorDto errorResponse = new ErrorDto("Requisição possui campos inválidos", status.value(),status.getReasonPhrase(), e.getBindingResult().getObjectName(), errors);
@@ -50,8 +50,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<Object> onConstraintValidationException(ConstraintViolationException e) {
     	
-      List<ErrorObject> errors = e.getConstraintViolations().stream()
-	  															   .map(error -> new ErrorObject(error.getMessage(),error.getPropertyPath().toString(),error.getInvalidValue()))
+      List<Error> errors = e.getConstraintViolations().stream()
+	  															   .map(error -> new Error(error.getMessage(),error.getPropertyPath().toString(),error.getInvalidValue()))
 	  															   .collect(Collectors.toList());
       
       ErrorDto errorResponse = new ErrorDto("Requisição possui campos inválidos", BAD_REQUEST.value(),BAD_REQUEST.getReasonPhrase(), e.getClass().getName(), errors);

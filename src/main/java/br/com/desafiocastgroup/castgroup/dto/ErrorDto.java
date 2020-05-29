@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-import br.com.desafiocastgroup.castgroup.exception.ErrorObject;
+import br.com.desafiocastgroup.castgroup.exception.Error;
 
 @Getter
 @AllArgsConstructor
@@ -15,5 +15,5 @@ public class ErrorDto {
     private final int code;
     private final String status;
     private final String objectName;
-    private final List<ErrorObject> errors;
+    private final List<Error> errors;
 }
